@@ -22,9 +22,9 @@ Este proyecto tiene como objetivo restaurar un coche radiocontrol en mal estado 
 
 - **Aveance y Retroceso**
 
-- **Giros a la Derecha e Izquierda:**
+- **Giros a la Derecha e Izquierda**
 
-- **Control de Velocidad:**
+- **Control de Velocidad**
 
 - **Función de Emergencia:** Parada en caso de pérdida de comunicación.
 
