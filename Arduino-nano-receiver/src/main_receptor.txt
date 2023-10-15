@@ -1,0 +1,149 @@
+// RECEPTOR NANO
+
+#include <Arduino.h>
+#include <SPI.h>
+#include <nRF24L01.h>
+#include <RF24.h>
+
+//* DEFINICION PINES
+#define ENA 7
+#define IN1 5
+#define IN2 6
+#define IN3 3
+#define IN4 4
+#define ENB 2
+
+// Configuracion RF
+RF24 radio(9, 10);          // CE, CSN
+uint8_t canalDeseado = 125; // Cambia esto al canal deseado (0-125)
+const byte address[6] = "00001";
+
+// Movimiento
+char text, text_ant;
+bool forward = true;
+bool left = false;
+bool stop = true;
+bool giro = false;
+
+void setup()
+{
+  Serial.begin(9600);
+
+  // RF
+  radio.begin();
+  radio.setChannel(canalDeseado); // Configura el canal
+  radio.openReadingPipe(0, address);
+  radio.setDataRate(RF24_250KBPS);
+  radio.setPALevel(RF24_PA_MIN);
+  radio.startListening();
+
+  // MOTORES
+  pinMode(IN1, OUTPUT);
+  pinMode(IN2, OUTPUT);
+  pinMode(IN3, OUTPUT);
+  pinMode(IN4, OUTPUT);
+}
+
+void loop()
+{
+  //* RECEPCIÓN DE COMANDOS RF
+  text_ant = text;
+  if (radio.available())
+  {
+    radio.read(&text, sizeof(text));
+    if (text == 'S')
+    {
+      stop = true;
+      Serial.println("STOP");
+    }
+    else if (text == 'G')
+    {
+      giro = false;
+      Serial.println("NO GIRO");
+    }
+    else if (text == 'F')
+    {
+      forward = true;
+      stop = false;
+      Serial.println("FORWARD");
+    }
+    else if (text == 'B')
+    {
+      forward = false;
+      stop = false;
+      Serial.println("BACKWARD");
+    }
+    else if (text == 'R')
+    {
+      left = false;
+      giro = true;
+      Serial.println("RIGHT");
+    }
+    else if (text == 'L')
+    {
+      left = true;
+      giro = true;
+      Serial.println("LEFT");
+    }
+  }
+
+  //* ACTUACIÓN EN MOTORES
+
+  //! DIRECCION (MOTOR DELANTERO)
+  if (giro) // SE DARA GIRO
+  {
+    // SENTIDO
+    if (left) // IZQUIERDA
+    {
+      digitalWrite(IN1, HIGH);
+      digitalWrite(IN2, LOW);
+    }
+    else // DERECHA
+    {
+      digitalWrite(IN1, LOW);
+      digitalWrite(IN2, HIGH);
+    }
+    analogWrite(ENA, 200);
+  }
+  else // NO SE DARA GIRO
+  {
+    digitalWrite(IN1, LOW);
+    digitalWrite(IN2, LOW);
+    analogWrite(ENA, 0);
+  }
+
+  //! TRACCION (MOTOR TRASERO)
+  if (!stop) // ACTIVADO
+  {
+    // SENTIDO
+    if (forward) // AVANCE
+    {
+      if (text_ant == 'B')
+      {
+        digitalWrite(IN3, LOW);
+        digitalWrite(IN4, LOW);
+        delay(200);
+      }
+      digitalWrite(IN3, HIGH);
+      digitalWrite(IN4, LOW);
+    }
+    else // RETROCESO
+    {
+      if (text_ant == 'F')
+      {
+        digitalWrite(IN3, LOW);
+        digitalWrite(IN4, LOW);
+        delay(200);
+      }
+      digitalWrite(IN3, LOW);
+      digitalWrite(IN4, HIGH);
+    }
+    // speed = map(motor, 0, 100, 40, 255);
+    analogWrite(ENB, 255);
+  }
+  else // PARADO
+  {
+    digitalWrite(IN3, LOW);
+    digitalWrite(IN4, LOW);
+  }
+}

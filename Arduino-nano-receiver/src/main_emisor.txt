@@ -1,0 +1,43 @@
+// EMISOR - ARDUINO NANO
+
+#include <SPI.h>
+#include <nRF24L01.h>
+#include <RF24.h>
+
+RF24 radio(9, 10);          // CE, CSN
+uint8_t canalDeseado = 125; // Cambia esto al canal deseado (0-125)
+
+const byte address[6] = "00001";
+
+char letra;
+
+void setup()
+{
+  Serial.begin(9600);
+  radio.begin();
+  radio.setChannel(canalDeseado); // Configura el canal
+  radio.openWritingPipe(address);
+  radio.setDataRate(RF24_250KBPS);
+  radio.setPALevel(RF24_PA_MIN);
+  radio.stopListening();
+}
+
+void loop()
+{
+  if (Serial.available() > 0)
+  {
+    // read the incoming byte:
+    letra = Serial.read();
+
+    // say what you got:
+    Serial.print("I received: ");
+    Serial.println(letra);
+
+    // radio.write(&letra, sizeof(letra));
+  }
+  radio.write(&letra, sizeof(letra));
+
+  // const char text[] = "BETIS";
+  // radio.write(&letra, sizeof(letra));
+  delay(1000);
+}
