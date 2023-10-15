@@ -18,6 +18,8 @@ Este proyecto tiene como objetivo restaurar un coche radiocontrol en mal estado 
 - Convertidores analógico-digital lectura joysticks
 - Driver de motores para dirección y tracción
 
+![Componentes Sistema Electrónico Interno](https://github.com/aglora/rally-car/blob/main/Imgs/2.jpg)
+
 ## Funcionalidades Principales
 
 - **Aveance y Retroceso**
