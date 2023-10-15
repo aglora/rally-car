@@ -2,7 +2,7 @@
 
 # Proyecto de Coche Radiocontrol con Radiofrecuencia
 
-![Coche Radiocontrol](https://link_a_la_imagen_del_coche.jpg)
+![Coche Radiocontrol]([https://link_a_la_imagen_del_coche.jpg](https://github.com/aglora/rally-car/blob/main/Imgs/1.jpg))
 
 Este proyecto tiene como objetivo restaurar un coche radiocontrol en mal estado mediante el desarrollo de un sistema electrónico personalizado. Hemos utilizado un chasis existente y se han integrado los componentes necesarios para crear un sistema completamente funcional. Además, he diseñado un control remoto personalizado para operar el coche. El sistema de comunicación se basa en módulos transceptores nRF24L01.
 
