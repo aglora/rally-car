@@ -30,3 +30,4 @@ Este proyecto tiene como objetivo restaurar un coche radiocontrol en mal estado 
 
 - **Función de Emergencia:** Parada en caso de pérdida de comunicación.
 
+![Componentes Sistema Electrónico Interno](https://github.com/aglora/rally-car/blob/main/Imgs/3.jpg)
